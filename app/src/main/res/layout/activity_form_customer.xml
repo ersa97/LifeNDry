@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="formCustomerViewModel"
+            type="com.lifendry.laundry.lifendry.ui.customer.form.FormCustomerViewModel" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.customer.form.FormCustomerActivity">
+
+        <include layout="@layout/template_toolbar" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/default_padding_margin"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_layout_customer_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_padding_margin"
+                android:hint="@string/name"
+                app:error="@{formCustomerViewModel.getCustomerNameErrorLiveData()}"
+                app:errorEnabled="true"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_customer_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="text"
+                    android:text="@={formCustomerViewModel.customerNameLiveData}"
+                    android:maxLines="1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_layout_customer_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_padding_margin"
+                android:hint="@string/email"
+                app:error="@{formCustomerViewModel.getCustomerEmailErrorLiveData()}"
+                app:errorEnabled="true"
+                app:layout_constraintTop_toBottomOf="@id/edit_layout_customer_name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_customer_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="textEmailAddress"
+
+                    android:text="@={formCustomerViewModel.customerEmailLiveData}"
+                    android:maxLines="1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_layout_customer_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_padding_margin"
+                android:hint="@string/no_hp"
+                app:error="@{formCustomerViewModel.getCustomerPhoneErrorLiveData()}"
+                app:errorEnabled="true"
+                app:layout_constraintTop_toBottomOf="@id/edit_layout_customer_email">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_customer_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="phone"
+                    android:text="@={formCustomerViewModel.customerPhoneLiveData}"
+                    android:maxLines="1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/edit_layout_customer_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_padding_margin"
+                android:hint="@string/address"
+                app:error="@{formCustomerViewModel.getCustomerAddressErrorLiveData()}"
+                app:errorEnabled="true"
+                app:layout_constraintTop_toBottomOf="@id/edit_layout_customer_phone">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_customer_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="textMultiLine"
+                    android:text="@={formCustomerViewModel.customerAddressLiveData}"
+                    android:maxLines="6" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <include
+            android:id="@+id/loading"
+            layout="@layout/template_loading"
+            android:visibility="@{safeUnbox(formCustomerViewModel.isLoading()) ? View.VISIBLE : View.GONE}"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

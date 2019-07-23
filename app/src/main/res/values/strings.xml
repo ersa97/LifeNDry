@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Life N Dry</string>
+    <string name="pelanggan">Pelanggan</string>
+    <string name="transaksi">Transaksi</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="akun">Akun</string>
+    <string name="cabang">Cabang</string>
+    <string name="address">Alamat</string>
+    <string name="no_hp">No. HP</string>
+    <string name="email">Email</string>
+    <string name="name">Nama</string>
+    <string name="edit">Ubah</string>
+    <string name="delete">Hapus</string>
+    <string name="add">Tambah</string>
+    <string name="search">Cari</string>
+    <string name="status">Status</string>
+    <string name="id">ID</string>
+    <string name="worker">Pegawai</string>
+    <string name="logout">Keluar</string>
+    <string name="info">Info</string>
+    <string name="quantity_minimum">Quantity Minimum</string>
+    <string name="price">Harga</string>
+    <string name="id_transaction">Transaksi Id</string>
+    <string name="menu">Menu</string>
+    <string name="quantity">Kuantitas</string>
+    <string name="cost">Biaya</string>
+    <string name="paid_status">Status Pembayaran</string>
+    <string name="taken_status">Status Pengambilan</string>
+    <string name="progress">Progress</string>
+    <string name="paid">Bayar</string>
+    <string name="take">Ambil</string>
+    <string name="date_format">%1$td %1$tB %1$tY</string>
+</resources>
