@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="TransactionViewModel"
             type="com.lifendry.laundry.lifendry.ui.main.transaction.TransactionViewModel" />
@@ -30,6 +31,7 @@
             style="@style/ListMenuButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:text="@string/pelanggan"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintLeft_toRightOf="@id/btn_transaksi"

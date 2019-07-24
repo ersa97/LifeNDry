@@ -12,6 +12,8 @@ import com.lifendry.laundry.lifendry.BR
 import com.lifendry.laundry.lifendry.R
 import com.lifendry.laundry.lifendry.base.BaseFragment
 import com.lifendry.laundry.lifendry.databinding.FragmentBranchMenuBinding
+import com.lifendry.laundry.lifendry.ui.historytransaction.HistoryTransactionActivity
+import com.lifendry.laundry.lifendry.ui.unfinishedtransaction.UnfinishedTransactionActivity
 import com.lifendry.laundry.lifendry.ui.worker.WorkerActivity
 import kotlinx.android.synthetic.main.fragment_branch_menu.*
 
@@ -42,6 +44,14 @@ class BranchMenuFragment : BaseFragment<FragmentBranchMenuBinding, BranchMenuVie
     private fun setUp(){
         btn_worker.setOnClickListener {
             startActivity(WorkerActivity.newIntent(requireContext()))
+        }
+
+        btn_unfinished_transaction.setOnClickListener {
+            startActivity(UnfinishedTransactionActivity.newIntent(requireContext()))
+        }
+
+        btn_history_transaction.setOnClickListener {
+            startActivity(HistoryTransactionActivity.newIntent(requireContext()))
         }
     }
 }

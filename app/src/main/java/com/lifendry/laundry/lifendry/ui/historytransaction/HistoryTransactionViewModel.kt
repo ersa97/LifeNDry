@@ -1,4 +1,4 @@
-package com.lifendry.laundry.lifendry.ui.unfinishedtransaction
+package com.lifendry.laundry.lifendry.ui.historytransaction
 
 import androidx.lifecycle.MutableLiveData
 import com.lifendry.laundry.lifendry.base.BaseViewModel
@@ -9,7 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class UnfinishedTransactionViewModel : BaseViewModel() {
+class HistoryTransactionViewModel : BaseViewModel(){
     val userLiveData: MutableLiveData<User> = MutableLiveData()
     val transactionsLiveData: MutableLiveData<List<Transaction>> = MutableLiveData()
     val errorLiveData: MutableLiveData<String> = MutableLiveData()
@@ -26,7 +26,7 @@ class UnfinishedTransactionViewModel : BaseViewModel() {
             setLoading(true)
 
             val response = withContext(Dispatchers.IO){
-                dataSource?.doShowUnfinishedTransaction(userLiveData.value?.id)
+                dataSource?.doShowFinishedTransaction(userLiveData.value?.id)
             }
 
             when(response){

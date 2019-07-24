@@ -16,6 +16,7 @@ import com.lifendry.laundry.lifendry.R
 import com.lifendry.laundry.lifendry.base.BaseActivity
 import com.lifendry.laundry.lifendry.databinding.ActivityMenuBinding
 import com.lifendry.laundry.lifendry.ui.menu.detail.DetailMenuActivity
+import com.lifendry.laundry.lifendry.utils.VerticalItemDecoration
 import kotlinx.android.synthetic.main.activity_menu.*
 import kotlinx.android.synthetic.main.template_toolbar.*
 
@@ -89,6 +90,7 @@ class MenuActivity : BaseActivity<ActivityMenuBinding, MenuViewModel>() {
         recycler_menu.apply {
             adapter = mMenuAdapter
             layoutManager = LinearLayoutManager(this@MenuActivity, RecyclerView.VERTICAL, false)
+            addItemDecoration(VerticalItemDecoration(15))
         }
 
         subscribeToLiveData()

@@ -1,5 +1,6 @@
 package com.lifendry.laundry.lifendry.ui.worker.detail
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -43,7 +44,11 @@ class DetailWorkerActivity : BaseActivity<ActivityDetailWorkerBinding, DetailWor
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_edit_delete, menu)
+        if(intent.getBooleanExtra(WORKER_LOOKUP, false)){
+            menuInflater.inflate(R.menu.menu_save, menu)
+        } else{
+            menuInflater.inflate(R.menu.menu_edit_delete, menu)
+        }
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -59,7 +64,7 @@ class DetailWorkerActivity : BaseActivity<ActivityDetailWorkerBinding, DetailWor
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when(item?.itemId){
+        return when (item?.itemId) {
             android.R.id.home -> {
                 finish()
                 true
@@ -79,9 +84,27 @@ class DetailWorkerActivity : BaseActivity<ActivityDetailWorkerBinding, DetailWor
                 }
                 true
             }
+
+            R.id.menu_save -> {
+                setResult(
+                    Activity.RESULT_OK,
+                    Intent().putExtra(
+                        WORKER_EXTRA,
+                        mDetailWorkerViewModel.getWorkerLiveData().value
+                    ).putExtra(
+                        WORKER_LOOKUP_LAUNDRY_EXTRA,
+                        intent.getStringExtra(WORKER_LOOKUP_LAUNDRY_EXTRA)
+                    )
+                )
+                finish()
+                true
+
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
+
     private fun doCallback(errorCode: Int) {
         when (errorCode) {
             0 -> {
@@ -103,6 +126,7 @@ class DetailWorkerActivity : BaseActivity<ActivityDetailWorkerBinding, DetailWor
             }
         }
     }
+
     private fun setUp() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -117,7 +141,7 @@ class DetailWorkerActivity : BaseActivity<ActivityDetailWorkerBinding, DetailWor
             txt_worker_id.text = it.idWorker
             txt_worker_address.text = it.address
             txt_worker_phone.text = it.phoneNumber
-            txt_worker_status.text = if(it.getIsActive()) "Aktif" else "Tidak Aktif"
+            txt_worker_status.text = if (it.getIsActive()) "Aktif" else "Tidak Aktif"
         })
     }
 
@@ -127,7 +151,17 @@ class DetailWorkerActivity : BaseActivity<ActivityDetailWorkerBinding, DetailWor
                 putExtra(WORKER_EXTRA, worker)
             }
 
-        private const val WORKER_EXTRA = "worker_extra"
+        fun newIntentLookUpActivities(context:Context, worker: Worker, idLaundryActivity: String?): Intent = Intent(context, DetailWorkerActivity::class.java).apply {
+            putExtra(WORKER_EXTRA, worker)
+            putExtra(WORKER_LOOKUP, true)
+            putExtra(WORKER_LOOKUP_LAUNDRY_EXTRA, idLaundryActivity)
+
+        }
+
+        const val WORKER_EXTRA = "worker_extra"
+        const val WORKER_LOOKUP_LAUNDRY_EXTRA = "WORKER_LOOKUP_LAUNDRY_EXTRA"
         const val WORKER_EDIT = 1
+        const val WORKER_LOOKUP = "WORKER_LOOKUP"
+
     }
 }

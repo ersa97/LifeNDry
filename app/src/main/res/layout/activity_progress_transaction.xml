@@ -1,9 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.progresstransaction.ProgressTransactionActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="progressTransactionViewModel"
+            type="com.lifendry.laundry.lifendry.ui.progresstransaction.ProgressTransactionViewModel" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.progresstransaction.ProgressTransactionActivity">
+
+        <include layout="@layout/template_toolbar"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="@dimen/default_padding_margin"
+                android:layout_marginLeft="@dimen/default_padding_margin"
+                android:layout_marginRight="@dimen/default_padding_margin"
+                android:id="@+id/txt_transaction_id"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:padding="@dimen/default_padding_margin"
+                android:clipToPadding="false"
+                app:layout_constraintTop_toBottomOf="@id/txt_transaction_id"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:id="@+id/recycler_progress"/>
+
+            <include layout="@layout/template_loading" android:id="@+id/loading"
+                android:visibility="@{safeUnbox(progressTransactionViewModel.isLoading()) ? View.VISIBLE: View.GONE}"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.progresstransaction.ProgressTransactionActivity"></activity>
+        <activity android:name=".ui.historytransaction.HistoryTransactionActivity"></activity>
+        <activity android:name=".ui.progresstransaction.ProgressTransactionActivity" />
         <activity android:name=".ui.unfinishedtransaction.UnfinishedTransactionActivity" />
         <activity android:name=".ui.detailtransaction.DetailTransactionActivity" />
         <activity android:name=".ui.info.InfoActivity" />

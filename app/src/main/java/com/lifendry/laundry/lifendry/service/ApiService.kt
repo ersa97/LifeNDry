@@ -1,5 +1,7 @@
 package com.lifendry.laundry.lifendry.service
 
+import com.lifendry.laundry.lifendry.model.activitylaundry.ActivityLaundryListResponse
+import com.lifendry.laundry.lifendry.model.activitylaundry.ActivityLaundryResponse
 import com.lifendry.laundry.lifendry.model.customer.CustomersListResponse
 import com.lifendry.laundry.lifendry.model.customer.CustomerResponse
 import com.lifendry.laundry.lifendry.model.login.LoginResponse
@@ -72,4 +74,30 @@ interface ApiService {
 
     @GET("transaksi/showUnfinished")
     fun showUnfinishedTransactionAsync(@Query("id_cabang") idBranch: String?) : Deferred<Response<TransactionListResponse>>
+
+    @GET("aktivitaslaundry/show")
+    fun showLaundryActivityAsync(@Query("id_transaksi_laundry") idTransaction: String?) : Deferred<Response<ActivityLaundryListResponse>>
+
+    @POST("aktivitaslaundry/melakukanAktivitasLaundry")
+    @FormUrlEncoded
+    fun startLaundryActivityAsync(@Field("id_aktivitas_laundry") idLaundryActivity: String?,
+                                  @Field("id_pegawai") idWorker: String?) : Deferred<Response<ActivityLaundryResponse>>
+
+    @POST("aktivitaslaundry/menyelesaikanAktivitasLaundry")
+    @FormUrlEncoded
+    fun finishLaundryActivityAsync(@Field("id_aktivitas_laundry") idLaundryActivity: String?) :Deferred<Response<ActivityLaundryResponse>>
+
+    @PUT("transaksi/paid")
+    @FormUrlEncoded
+    fun paidTransactionAsync(@Field("id_transaksi") id: String?) : Deferred<Response<TransactionResponse>>
+
+    @PUT("transaksi/take")
+    @FormUrlEncoded
+    fun takeTransactionAsync(@Field("id_transaksi") id: String?) : Deferred<Response<TransactionResponse>>
+
+    @GET("transaksi/getTransaction")
+    fun getTransactionAsync(@Query("id_transaksi_laundry") id: String?) : Deferred<Response<TransactionResponse>>
+
+    @GET("transaksi/showFinishedTransaction")
+    fun showFinishedTransactionAsync(@Query("id_cabang") id: String?) : Deferred<Response<TransactionListResponse>>
 }

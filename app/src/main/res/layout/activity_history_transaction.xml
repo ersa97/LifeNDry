@@ -4,18 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <import type="android.view.View" />
-
         <variable
-            name="unfinishedTransactionViewModel"
-            type="com.lifendry.laundry.lifendry.ui.unfinishedtransaction.UnfinishedTransactionViewModel" />
+            name="historyTransactionViewModel"
+            type="com.lifendry.laundry.lifendry.ui.historytransaction.HistoryTransactionViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.unfinishedtransaction.UnfinishedTransactionActivity">
+        tools:context=".ui.historytransaction.HistoryTransactionActivity">
 
         <include layout="@layout/template_toolbar" />
 
@@ -31,7 +29,8 @@
             android:id="@+id/loading"
             layout="@layout/template_loading"
 
-            android:visibility="@{safeUnbox(unfinishedTransactionViewModel.isLoading()) ? View.VISIBLE : View.GONE}"
+            android:visibility="@{safeUnbox(historyTransactionViewModel.isLoading()) ? View.VISIBLE : View.GONE}"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

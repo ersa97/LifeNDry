@@ -98,7 +98,7 @@ class CustomerActivity : BaseActivity<ActivityCustomerBinding, CustomerViewModel
         recycler_customer.apply {
             adapter = mCustomerAdapter
             layoutManager = LinearLayoutManager(this@CustomerActivity, RecyclerView.VERTICAL, false)
-            addItemDecoration(VerticalItemDecoration(10))
+            addItemDecoration(VerticalItemDecoration(15))
         }
 
         btn_search.setOnClickListener {

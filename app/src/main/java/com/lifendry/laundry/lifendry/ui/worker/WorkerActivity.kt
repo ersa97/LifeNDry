@@ -1,5 +1,6 @@
 package com.lifendry.laundry.lifendry.ui.worker
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -67,10 +68,15 @@ class WorkerActivity : BaseActivity<ActivityWorkerBinding, WorkerViewModel>() {
         }
     }
 
+
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == WORKER_EDIT_DELETE && resultCode == RESULT_OK) {
             mWorkerViewModel.searchWorker(edit_search_worker.text.toString().toLowerCase())
+        } else if(requestCode == WORKER_LOOKUP_CODE && resultCode == Activity.RESULT_OK){
+            setResult(RESULT_OK, data)
+            finish()
         }
     }
 
@@ -80,12 +86,17 @@ class WorkerActivity : BaseActivity<ActivityWorkerBinding, WorkerViewModel>() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
         mWorkerAdapter = WorkerAdapter(listener = {
-            startActivityForResult(DetailWorkerActivity.newIntent(this, it), WORKER_EDIT_DELETE)
+            if(intent.getBooleanExtra(WORKER_LOOKUP, false)){
+                startActivityForResult(DetailWorkerActivity.newIntentLookUpActivities(this, it, intent.getStringExtra(WORKER_LOOKUP_LAUNDRY_EXTRA)), WORKER_LOOKUP_CODE)
+            } else {
+                startActivityForResult(DetailWorkerActivity.newIntent(this, it), WORKER_EDIT_DELETE)
+            }
+
         })
         recycler_worker.apply {
             adapter = mWorkerAdapter
             layoutManager = LinearLayoutManager(this@WorkerActivity, RecyclerView.VERTICAL, false)
-            addItemDecoration(VerticalItemDecoration(10))
+            addItemDecoration(VerticalItemDecoration(15))
         }
 
         btn_search.setOnClickListener {
@@ -112,7 +123,15 @@ class WorkerActivity : BaseActivity<ActivityWorkerBinding, WorkerViewModel>() {
 
     companion object{
         fun newIntent(context: Context): Intent = Intent(context, WorkerActivity::class.java)
+        fun newIntentLookUpActivities(context: Context, idLaundryActivity: String?): Intent = Intent(context, WorkerActivity::class.java).apply {
+            putExtra(WORKER_LOOKUP, true)
+            putExtra(WORKER_LOOKUP_LAUNDRY_EXTRA, idLaundryActivity)
+        }
+
         const val WORKER_EDIT_DELETE = 1
+        const val WORKER_LOOKUP = "WORKER_LOOKUP"
+        const val WORKER_LOOKUP_LAUNDRY_EXTRA = "WORKER_LOOKUP_LAUNDRY_EXTRA"
+        const val WORKER_LOOKUP_CODE = 2
     }
 
 }

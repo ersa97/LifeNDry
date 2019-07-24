@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="android.view.View" />
         <variable
             name="detailTransactionViewModel"
             type="com.lifendry.laundry.lifendry.ui.detailtransaction.DetailTransactionViewModel" />
@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         tools:context=".ui.detailtransaction.DetailTransactionActivity">
 
-        <include layout="@layout/template_toolbar"/>
+        <!--<include layout="@layout/template_toolbar"/>-->
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -200,6 +200,10 @@
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
+
+        <include layout="@layout/template_loading" android:id="@+id/loading"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+            android:visibility="@{safeUnbox(detailTransactionViewModel.isLoading()) ? View.VISIBLE : View.GONE}"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

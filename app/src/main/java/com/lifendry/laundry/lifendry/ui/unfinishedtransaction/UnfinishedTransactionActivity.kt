@@ -13,6 +13,8 @@ import com.lifendry.laundry.lifendry.BR
 import com.lifendry.laundry.lifendry.R
 import com.lifendry.laundry.lifendry.base.BaseActivity
 import com.lifendry.laundry.lifendry.databinding.ActivityUnfinishedTransactionBinding
+import com.lifendry.laundry.lifendry.ui.detailtransaction.DetailTransactionActivity
+import com.lifendry.laundry.lifendry.utils.VerticalItemDecoration
 import kotlinx.android.synthetic.main.activity_unfinished_transaction.*
 import kotlinx.android.synthetic.main.template_toolbar.*
 
@@ -41,6 +43,13 @@ class UnfinishedTransactionActivity : BaseActivity<ActivityUnfinishedTransaction
         setUp()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == DETAIL_TRANSACTION_CODE && resultCode == RESULT_OK){
+            mUnfinishedTransactionViewModel.load()
+        }
+    }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when(item?.itemId){
             android.R.id.home -> {
@@ -57,12 +66,13 @@ class UnfinishedTransactionActivity : BaseActivity<ActivityUnfinishedTransaction
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
         mUnfinishedTransactionAdapter = UnfinishedTransactionAdapter(listener = {
-
+            startActivityForResult(DetailTransactionActivity.newIntent(this, it), DETAIL_TRANSACTION_CODE)
         })
 
         recycler_transaction.apply {
             adapter = mUnfinishedTransactionAdapter
             layoutManager = LinearLayoutManager(this@UnfinishedTransactionActivity, RecyclerView.VERTICAL, false)
+            addItemDecoration(VerticalItemDecoration(15))
         }
 
         mUnfinishedTransactionViewModel.setUser(getUserPreference().user)
@@ -80,5 +90,7 @@ class UnfinishedTransactionActivity : BaseActivity<ActivityUnfinishedTransaction
 
     companion object{
         fun newIntent(context: Context) : Intent = Intent(context, UnfinishedTransactionActivity::class.java)
+
+        const val DETAIL_TRANSACTION_CODE = 1
     }
 }

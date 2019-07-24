@@ -44,12 +44,18 @@ data class Transaction (
     var price: Double = 0.0,
 
     @SerializedName("is_paid")
-    var isPaid: Boolean = false,
+    var isPaid: Int = 0,
 
     @SerializedName("is_taken")
-    var isTaken: Boolean = false,
+    var isTaken: Int = 0,
+
+    @SerializedName("waktu_pengambilan")
+    var takeTime: Date? = null,
 
     @SerializedName("info")
-    var info: String? = null
+    var info: String? = null,
+
+    @SerializedName("selesai_dikerjakan")
+    var done: Int = 0
 
 ) : Parcelable

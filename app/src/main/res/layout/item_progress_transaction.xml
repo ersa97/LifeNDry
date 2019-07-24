@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/txt_activity_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txt_activity_worker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/txt_activity_name" />
+
+    <TextView
+        android:id="@+id/txt_activity_start"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/txt_activity_worker" />
+
+    <TextView
+        android:id="@+id/txt_activity_end"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/txt_activity_start" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_start"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="@dimen/default_padding_margin"
+        android:layout_marginTop="@dimen/default_padding_margin"
+        android:text="Mulai Pekerjaan"
+        app:icon="@drawable/ic_done_black_24dp"
+        app:layout_constraintBottom_toBottomOf="@id/btn_finish"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layoutDirection="rtl"
+        app:layout_constraintRight_toLeftOf="@id/btn_finish"
+        app:layout_constraintTop_toBottomOf="@id/txt_activity_end" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_finish"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/default_padding_margin"
+        android:layout_marginTop="@dimen/default_padding_margin"
+        android:text="Selesaikan Pekerjaan"
+        android:layoutDirection="rtl"
+        app:icon="@drawable/ic_done_all_black_24dp"
+        app:layout_constraintLeft_toRightOf="@id/btn_start"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_activity_end" />
+</androidx.constraintlayout.widget.ConstraintLayout>

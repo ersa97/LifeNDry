@@ -1,6 +1,8 @@
 package com.lifendry.laundry.lifendry.service
 
 import android.util.Log
+import com.lifendry.laundry.lifendry.model.activitylaundry.ActivityLaundryListResponse
+import com.lifendry.laundry.lifendry.model.activitylaundry.ActivityLaundryResponse
 import com.lifendry.laundry.lifendry.model.customer.CustomerResponse
 import com.lifendry.laundry.lifendry.model.customer.CustomersListResponse
 import com.lifendry.laundry.lifendry.model.login.LoginResponse
@@ -383,6 +385,143 @@ class LifendryDataSource(private var api: ApiService? = LifendryRetrofit.api(Net
             showUnfinishedTransactionAsync(idBranch)
         }
     }
+
+    suspend fun doShowLaundryActivity(idTransaction: String?) = safeApiCall {
+        showLaundryActivityAsync(idTransaction)
+    }
+
+    private suspend fun showLaundryActivityAsync(idTransaction: String?): Result<ActivityLaundryListResponse> {
+        val response = api?.showLaundryActivityAsync(idTransaction)?.await()
+
+        return if (response?.code() == 200) {
+            if (response.isSuccessful) {
+                Result.Success(response.body()!!)
+            } else {
+                Result.Error(IOException())
+            }
+        } else {
+            this.changeBaseUrl(
+                LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()])
+            )
+            showLaundryActivityAsync(idTransaction)
+        }
+    }
+
+    suspend fun doStartLaundryActivity(idLaundryActivity: String?, idWorker: String?) = safeApiCall {
+        startLaundryActivityAsync(idLaundryActivity, idWorker)
+    }
+
+    private suspend fun startLaundryActivityAsync(idLaundryActivity: String?, idWorker: String?): Result<ActivityLaundryResponse> {
+        val response = api?.startLaundryActivityAsync(idLaundryActivity, idWorker)?.await()
+
+        return if (response?.code() == 200) {
+            if (response.isSuccessful) {
+                Result.Success(response.body()!!)
+            } else {
+                Result.Error(IOException())
+            }
+        } else {
+            this.changeBaseUrl(
+                LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()])
+            )
+            startLaundryActivityAsync(idLaundryActivity, idWorker)
+        }
+    }
+
+    suspend fun doFinishLaundryActivity(idLaundryActivity: String?) = safeApiCall {
+        finishLaundryActivityAsync(idLaundryActivity)
+    }
+
+    private suspend fun finishLaundryActivityAsync(idLaundryActivity: String?): Result<ActivityLaundryResponse> {
+        val response = api?.finishLaundryActivityAsync(idLaundryActivity)?.await()
+
+        return if (response?.code() == 200) {
+            if (response.isSuccessful) {
+                Result.Success(response.body()!!)
+            } else {
+                Result.Error(IOException())
+            }
+        } else {
+            this.changeBaseUrl(
+                LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()])
+            )
+            finishLaundryActivityAsync(idLaundryActivity)
+        }
+    }
+
+    suspend fun doPaidTransaction(id: String?) = safeApiCall {
+        paidTransactionAsync(id)
+    }
+
+    private suspend fun paidTransactionAsync(id: String?) : Result<TransactionResponse> {
+        val response = api?.paidTransactionAsync(id)?.await()
+
+        return if(response?.code() == 200){
+            if(response.isSuccessful){
+                Result.Success(response.body()!!)
+            } else {
+                Result.Error(IOException())
+            }
+        } else {
+            this.changeBaseUrl(LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()]))
+            paidTransactionAsync(id)
+        }
+    }
+
+    suspend fun doTakeTransaction(id: String?) = safeApiCall {
+        takeTransactionAsync(id)
+    }
+
+    private suspend fun takeTransactionAsync(id: String?): Result<TransactionResponse> {
+        val responnse = api?.takeTransactionAsync(id)?.await()
+        return if(responnse?.code() == 200){
+            if(responnse.isSuccessful){
+                Result.Success(responnse.body()!!)
+            } else {
+                Result.Error(IOException())
+            }
+        } else {
+            this.changeBaseUrl(LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()]))
+            takeTransactionAsync(id)
+        }
+    }
+
+    suspend fun doGetTransaction(id: String?) = safeApiCall {
+        getTransactionAsync(id)
+    }
+
+    private suspend fun getTransactionAsync(id: String?): Result<TransactionResponse> {
+        val responnse = api?.getTransactionAsync(id)?.await()
+        return if(responnse?.code() == 200){
+            if(responnse.isSuccessful){
+                Result.Success(responnse.body()!!)
+            } else {
+                Result.Error(IOException())
+            }
+        } else {
+            this.changeBaseUrl(LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()]))
+            getTransactionAsync(id)
+        }
+    }
+
+    suspend fun doShowFinishedTransaction(id: String?) = safeApiCall {
+        showFinishedTransactionAsync(id)
+    }
+
+    private suspend fun showFinishedTransactionAsync(id: String?): Result<TransactionListResponse> {
+        val responnse = api?.showFinishedTransactionAsync(id)?.await()
+        return if(responnse?.code() == 200){
+            if(responnse.isSuccessful){
+                Result.Success(responnse.body()!!)
+            } else {
+                Result.Error(IOException())
+            }
+        } else {
+            this.changeBaseUrl(LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()]))
+            showFinishedTransactionAsync(id)
+        }
+    }
+
 
     private fun changeBaseUrl(newApi: ApiService) {
         api = null
