@@ -10,6 +10,6 @@ object NetworkUtils {
         return activeNetwork != null && activeNetwork.isConnected
     }
 
-    val BASE_URL = arrayListOf("http://192.168.137.1:8000/api/", "http://192.168.137.1:8000/api/", "http://192.168.137.1:8000/api/")
+    val BASE_URL = arrayListOf("http:/pdt1.himastika.me/api/", "http://pdt1.himastika.me/api/", "http://pdt3.himastika.me/api/")
 
 }
