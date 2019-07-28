@@ -23,7 +23,7 @@ object LifendryRetrofit {
 
     fun api(BASE_URL: String): ApiService {
         return Retrofit.Builder().client(client)
-            .baseUrl(BASE_URL)
+            .baseUrl("http://"+BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()

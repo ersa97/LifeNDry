@@ -59,6 +59,8 @@ class HistoryTransactionActivity : BaseActivity<ActivityHistoryTransactionBindin
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
+        mHistoryTransactionViewModel.setServerLiveData(getServerPreference().server)
+
         mHistoryTransactionAdapter = HistoryTransactionAdapter(listener = {
             startActivity(DetailTransactionActivity.newIntent(this, it))
         })

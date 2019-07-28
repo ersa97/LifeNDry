@@ -26,7 +26,7 @@ class HistoryTransactionViewModel : BaseViewModel(){
             setLoading(true)
 
             val response = withContext(Dispatchers.IO){
-                dataSource?.doShowFinishedTransaction(userLiveData.value?.id)
+                dataSource?.doShowFinishedTransaction(getServerLiveData().value?.idServer, userLiveData.value?.id)
             }
 
             when(response){

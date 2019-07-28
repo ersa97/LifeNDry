@@ -16,20 +16,8 @@ import com.lifendry.laundry.lifendry.utils.safeApiCall
 import java.io.IOException
 import java.net.SocketTimeoutException
 
-class LifendryDataSource(private var api: ApiService? = LifendryRetrofit.api(NetworkUtils.BASE_URL[0])) {
+class LifendryDataSource(private var api: ApiService? = null) {
 
-    private var indexBaseUrl = 0
-    private var failedCount = 0
-
-    private fun incrementBaseUrl(): Int {
-        if (indexBaseUrl < 3) {
-            indexBaseUrl++
-            failedCount++
-        } else {
-            indexBaseUrl = 0
-        }
-        return indexBaseUrl
-    }
 
     suspend fun doLogin(email: String?, password: String?) = safeApiCall {
         loginAsync(email, password)
@@ -37,23 +25,15 @@ class LifendryDataSource(private var api: ApiService? = LifendryRetrofit.api(Net
 
     private suspend fun loginAsync(email: String?, password: String?): Result<LoginResponse> {
 
-        try {
-            val response = api?.loginAsync(email, password)?.await()
-            return if (response?.code() == 200) {
-                if (response.isSuccessful) {
-                    Result.Success(response.body()!!)
-                } else {
-                    Result.Error(IOException())
-                }
+        val response = api?.loginAsync(email, password)?.await()
+        return if (response?.code() == 200) {
+            if (response.isSuccessful) {
+                Result.Success(response.body()!!)
             } else {
-                this.changeBaseUrl(
-                    LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()])
-                )
-                loginAsync(email, password)
+                Result.Error(IOException())
             }
-        } catch (e: Exception) {
-            Log.e("Service", e.message)
-            return loginAsync(email, password)
+        } else {
+            Result.Error(IOException())
         }
 
 
@@ -69,26 +49,19 @@ class LifendryDataSource(private var api: ApiService? = LifendryRetrofit.api(Net
         phone: String?,
         address: String?
     ): Result<CustomerResponse> {
-        try {
-            val response = api?.createCustomerAsync(email, name, phone, address)?.await()
-            return if (response?.code() == 200) {
-                if (response.isSuccessful) {
-                    Result.Success(response.body()!!)
-                } else {
-                    Log.e("ERROR", response.message())
-                    Result.Error(IOException())
-                }
+        val response = api?.createCustomerAsync(email, name, phone, address)?.await()
+        return if (response?.code() == 200) {
+            if (response.isSuccessful) {
+                Result.Success(response.body()!!)
             } else {
-                this.changeBaseUrl(
-                    LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()])
-                )
-                createCustomerAsync(email, name, phone, address)
+                Log.e("ERROR", response.message())
+                Result.Error(IOException())
             }
-        } catch (e: Exception) {
-            Log.d("EXCEPTIOn", e.message)
-            e.printStackTrace()
-            return Result.Error(IOException())
+        } else {
+            Log.e("ERROR", response?.message())
+            Result.Error(IOException())
         }
+
     }
 
     suspend fun doEditCustomer(id: String?, email: String?, name: String?, phone: String?, address: String?) =
@@ -111,10 +84,7 @@ class LifendryDataSource(private var api: ApiService? = LifendryRetrofit.api(Net
                 Result.Error(IOException())
             }
         } else {
-            this.changeBaseUrl(
-                LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()])
-            )
-            editCustomerAsync(id, email, name, phone, address)
+            Result.Error(IOException())
         }
     }
 
@@ -123,25 +93,14 @@ class LifendryDataSource(private var api: ApiService? = LifendryRetrofit.api(Net
     }
 
     private suspend fun deleteCustomerAsync(pelangganId: String): Result<CustomerResponse> {
-        try {
-            val response = api?.deleteCustomerAsync(pelangganId)?.await()
-            return if (response?.isSuccessful == true) {
-                Result.Success(response.body()!!)
-            } else {
-                Result.Error(IOException())
-            }
-        } catch (e: SocketTimeoutException) {
-            return if (failedCount < 3) {
-                this.changeBaseUrl(
-                    LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()])
-                )
-                deleteCustomerAsync(pelangganId)
-            } else {
-                failedCount = 0
-                Result.Error(IOException())
-            }
+        val response = api?.deleteCustomerAsync(pelangganId)?.await()
+        return if (response?.isSuccessful == true) {
+            Result.Success(response.body()!!)
+        } else {
+            Result.Error(IOException())
         }
     }
+
 
     suspend fun doSearchCustomer(text: String) = safeApiCall {
         searchCustomerAsync(text)
@@ -156,10 +115,7 @@ class LifendryDataSource(private var api: ApiService? = LifendryRetrofit.api(Net
                 Result.Error(IOException())
             }
         } else {
-            this.changeBaseUrl(
-                LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()])
-            )
-            searchCustomerAsync(text)
+            Result.Error(IOException())
         }
     }
 
@@ -168,25 +124,17 @@ class LifendryDataSource(private var api: ApiService? = LifendryRetrofit.api(Net
     }
 
     private suspend fun searchWorkerAsync(text: String, idBranch: String): Result<WorkerListResponse> {
-        return try {
-            val response = api?.searchWorkerAsync(text, idBranch)?.await()
-            if (response?.code() == 200) {
-                if (response.isSuccessful) {
-                    Result.Success(response.body()!!)
-                } else {
-                    Result.Error(IOException())
-                }
+        val response = api?.searchWorkerAsync(text, idBranch)?.await()
+        return if (response?.code() == 200) {
+            if (response.isSuccessful) {
+                Result.Success(response.body()!!)
             } else {
-                this.changeBaseUrl(
-                    LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()])
-                )
-                searchWorkerAsync(text, idBranch)
+                Result.Error(IOException())
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Log.e("Error", e.message)
-            return Result.Error(e)
+        } else {
+            Result.Error(IOException())
         }
+
     }
 
     suspend fun doCreateWorker(branchId: String, name: String, address: String, phone: String) = safeApiCall {
@@ -204,37 +152,23 @@ class LifendryDataSource(private var api: ApiService? = LifendryRetrofit.api(Net
         address: String,
         phone: String
     ): Result<WorkerResponse> {
-        try {
-            val response = api?.createWorkerAsync(
-                branchId,
-                name,
-                address,
-                phone,
-                1
-            )?.await()
-            return if (response?.code() == 200) {
-                if (response.isSuccessful) {
-                    Result.Success(response.body()!!)
-                } else {
-                    Result.Error(IOException())
-                }
-            } else {
-                this.changeBaseUrl(
-                    LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()])
-                )
-                createWorkerAsync(
-                    branchId,
-                    name,
-                    address,
-                    phone
-                )
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Log.e("Error", e.message)
-            return Result.Error(e)
-        }
 
+        val response = api?.createWorkerAsync(
+            branchId,
+            name,
+            address,
+            phone,
+            1
+        )?.await()
+        return if (response?.code() == 200) {
+            if (response.isSuccessful) {
+                Result.Success(response.body()!!)
+            } else {
+                Result.Error(IOException())
+            }
+        } else {
+            Result.Error(IOException())
+        }
     }
 
     suspend fun doEditWorker(
@@ -278,17 +212,7 @@ class LifendryDataSource(private var api: ApiService? = LifendryRetrofit.api(Net
                 Result.Error(IOException())
             }
         } else {
-            this.changeBaseUrl(
-                LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()])
-            )
-            editWorkerAsync(
-                workerId,
-                branchId,
-                name,
-                address,
-                phone,
-                isActive
-            )
+            Result.Error(IOException())
         }
     }
 
@@ -305,10 +229,7 @@ class LifendryDataSource(private var api: ApiService? = LifendryRetrofit.api(Net
                 Result.Error(IOException())
             }
         } else {
-            this.changeBaseUrl(
-                LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()])
-            )
-            deleteWorkerAsync(workerId)
+            Result.Error(IOException())
         }
     }
 
@@ -325,31 +246,30 @@ class LifendryDataSource(private var api: ApiService? = LifendryRetrofit.api(Net
                 Result.Error(IOException())
             }
         } else {
-            this.changeBaseUrl(
-                LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()])
-            )
-            showMenuAsync()
+            Result.Error(IOException())
         }
     }
 
     suspend fun doCreateTransaction(
+        idServer: Int?,
         idBranch: String?,
         idCustomer: String?,
         idMenu: String?,
         quantity: Double?,
         info: String?
     ) = safeApiCall {
-        createTransactionAsync(idBranch, idCustomer, idMenu, quantity, info)
+        createTransactionAsync(idServer, idBranch, idCustomer, idMenu, quantity, info)
     }
 
     private suspend fun createTransactionAsync(
+        idServer: Int?,
         idBranch: String?,
         idCustomer: String?,
         idMenu: String?,
         quantity: Double?,
         info: String?
     ): Result<TransactionResponse> {
-        val response = api?.createTransactionAsync(idBranch, idCustomer, idMenu, quantity, info)?.await()
+        val response = api?.createTransactionAsync(idServer, idBranch, idCustomer, idMenu, quantity, info)?.await()
 
         return if (response?.code() == 200) {
             if (response.isSuccessful) {
@@ -358,19 +278,16 @@ class LifendryDataSource(private var api: ApiService? = LifendryRetrofit.api(Net
                 Result.Error(IOException())
             }
         } else {
-            this.changeBaseUrl(
-                LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()])
-            )
-            createTransactionAsync(idBranch, idCustomer, idMenu, quantity, info)
+            Result.Error(IOException())
         }
     }
 
-    suspend fun doShowUnfinishedTransaction(idBranch: String?) = safeApiCall {
-        showUnfinishedTransactionAsync(idBranch)
+    suspend fun doShowUnfinishedTransaction(idServer: Int?, idBranch: String?) = safeApiCall {
+        showUnfinishedTransactionAsync(idServer, idBranch)
     }
 
-    private suspend fun showUnfinishedTransactionAsync(idBranch: String?): Result<TransactionListResponse> {
-        val response = api?.showUnfinishedTransactionAsync(idBranch)?.await()
+    private suspend fun showUnfinishedTransactionAsync(idServer: Int?, idBranch: String?): Result<TransactionListResponse> {
+        val response = api?.showUnfinishedTransactionAsync(idServer, idBranch)?.await()
 
         return if (response?.code() == 200) {
             if (response.isSuccessful) {
@@ -379,10 +296,7 @@ class LifendryDataSource(private var api: ApiService? = LifendryRetrofit.api(Net
                 Result.Error(IOException())
             }
         } else {
-            this.changeBaseUrl(
-                LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()])
-            )
-            showUnfinishedTransactionAsync(idBranch)
+            Result.Error(IOException())
         }
     }
 
@@ -400,19 +314,20 @@ class LifendryDataSource(private var api: ApiService? = LifendryRetrofit.api(Net
                 Result.Error(IOException())
             }
         } else {
-            this.changeBaseUrl(
-                LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()])
-            )
-            showLaundryActivityAsync(idTransaction)
+            Result.Error(IOException())
         }
     }
 
-    suspend fun doStartLaundryActivity(idLaundryActivity: String?, idWorker: String?) = safeApiCall {
-        startLaundryActivityAsync(idLaundryActivity, idWorker)
+    suspend fun doStartLaundryActivity(idServer : Int?, idLaundryActivity: String?, idWorker: String?) = safeApiCall {
+        startLaundryActivityAsync(idServer, idLaundryActivity, idWorker)
     }
 
-    private suspend fun startLaundryActivityAsync(idLaundryActivity: String?, idWorker: String?): Result<ActivityLaundryResponse> {
-        val response = api?.startLaundryActivityAsync(idLaundryActivity, idWorker)?.await()
+    private suspend fun startLaundryActivityAsync(
+        idServer: Int?,
+        idLaundryActivity: String?,
+        idWorker: String?
+    ): Result<ActivityLaundryResponse> {
+        val response = api?.startLaundryActivityAsync(idServer, idLaundryActivity, idWorker)?.await()
 
         return if (response?.code() == 200) {
             if (response.isSuccessful) {
@@ -421,19 +336,16 @@ class LifendryDataSource(private var api: ApiService? = LifendryRetrofit.api(Net
                 Result.Error(IOException())
             }
         } else {
-            this.changeBaseUrl(
-                LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()])
-            )
-            startLaundryActivityAsync(idLaundryActivity, idWorker)
+            Result.Error(IOException())
         }
     }
 
-    suspend fun doFinishLaundryActivity(idLaundryActivity: String?) = safeApiCall {
-        finishLaundryActivityAsync(idLaundryActivity)
+    suspend fun doFinishLaundryActivity(idServer: Int?, idLaundryActivity: String?) = safeApiCall {
+        finishLaundryActivityAsync(idServer, idLaundryActivity)
     }
 
-    private suspend fun finishLaundryActivityAsync(idLaundryActivity: String?): Result<ActivityLaundryResponse> {
-        val response = api?.finishLaundryActivityAsync(idLaundryActivity)?.await()
+    private suspend fun finishLaundryActivityAsync(idServer: Int?, idLaundryActivity: String?): Result<ActivityLaundryResponse> {
+        val response = api?.finishLaundryActivityAsync(idServer, idLaundryActivity)?.await()
 
         return if (response?.code() == 200) {
             if (response.isSuccessful) {
@@ -442,47 +354,42 @@ class LifendryDataSource(private var api: ApiService? = LifendryRetrofit.api(Net
                 Result.Error(IOException())
             }
         } else {
-            this.changeBaseUrl(
-                LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()])
-            )
-            finishLaundryActivityAsync(idLaundryActivity)
+            Result.Error(IOException())
         }
     }
 
-    suspend fun doPaidTransaction(id: String?) = safeApiCall {
-        paidTransactionAsync(id)
+    suspend fun doPaidTransaction(idServer: Int?, id: String?) = safeApiCall {
+        paidTransactionAsync(idServer, id)
     }
 
-    private suspend fun paidTransactionAsync(id: String?) : Result<TransactionResponse> {
-        val response = api?.paidTransactionAsync(id)?.await()
+    private suspend fun paidTransactionAsync(idServer: Int?, id: String?): Result<TransactionResponse> {
+        val response = api?.paidTransactionAsync(idServer, id)?.await()
 
-        return if(response?.code() == 200){
-            if(response.isSuccessful){
+        return if (response?.code() == 200) {
+            if (response.isSuccessful) {
                 Result.Success(response.body()!!)
             } else {
                 Result.Error(IOException())
             }
         } else {
-            this.changeBaseUrl(LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()]))
-            paidTransactionAsync(id)
+            Result.Error(IOException())
         }
     }
 
-    suspend fun doTakeTransaction(id: String?) = safeApiCall {
-        takeTransactionAsync(id)
+    suspend fun doTakeTransaction(idServer: Int?, id: String?) = safeApiCall {
+        takeTransactionAsync(idServer, id)
     }
 
-    private suspend fun takeTransactionAsync(id: String?): Result<TransactionResponse> {
-        val responnse = api?.takeTransactionAsync(id)?.await()
-        return if(responnse?.code() == 200){
-            if(responnse.isSuccessful){
+    private suspend fun takeTransactionAsync(idServer: Int?, id: String?): Result<TransactionResponse> {
+        val responnse = api?.takeTransactionAsync(idServer, id)?.await()
+        return if (responnse?.code() == 200) {
+            if (responnse.isSuccessful) {
                 Result.Success(responnse.body()!!)
             } else {
                 Result.Error(IOException())
             }
         } else {
-            this.changeBaseUrl(LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()]))
-            takeTransactionAsync(id)
+            Result.Error(IOException())
         }
     }
 
@@ -492,33 +399,31 @@ class LifendryDataSource(private var api: ApiService? = LifendryRetrofit.api(Net
 
     private suspend fun getTransactionAsync(id: String?): Result<TransactionResponse> {
         val responnse = api?.getTransactionAsync(id)?.await()
-        return if(responnse?.code() == 200){
-            if(responnse.isSuccessful){
+        return if (responnse?.code() == 200) {
+            if (responnse.isSuccessful) {
                 Result.Success(responnse.body()!!)
             } else {
                 Result.Error(IOException())
             }
         } else {
-            this.changeBaseUrl(LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()]))
-            getTransactionAsync(id)
+            Result.Error(IOException())
         }
     }
 
-    suspend fun doShowFinishedTransaction(id: String?) = safeApiCall {
-        showFinishedTransactionAsync(id)
+    suspend fun doShowFinishedTransaction(idServer: Int?, id: String?) = safeApiCall {
+        showFinishedTransactionAsync(idServer, id)
     }
 
-    private suspend fun showFinishedTransactionAsync(id: String?): Result<TransactionListResponse> {
-        val responnse = api?.showFinishedTransactionAsync(id)?.await()
-        return if(responnse?.code() == 200){
-            if(responnse.isSuccessful){
+    private suspend fun showFinishedTransactionAsync(idServer: Int?, id: String?): Result<TransactionListResponse> {
+        val responnse = api?.showFinishedTransactionAsync(idServer, id)?.await()
+        return if (responnse?.code() == 200) {
+            if (responnse.isSuccessful) {
                 Result.Success(responnse.body()!!)
             } else {
                 Result.Error(IOException())
             }
         } else {
-            this.changeBaseUrl(LifendryRetrofit.api(NetworkUtils.BASE_URL[incrementBaseUrl()]))
-            showFinishedTransactionAsync(id)
+            Result.Error(IOException())
         }
     }
 

@@ -65,6 +65,8 @@ class UnfinishedTransactionActivity : BaseActivity<ActivityUnfinishedTransaction
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
+
+
         mUnfinishedTransactionAdapter = UnfinishedTransactionAdapter(listener = {
             startActivityForResult(DetailTransactionActivity.newIntent(this, it), DETAIL_TRANSACTION_CODE)
         })
@@ -76,7 +78,9 @@ class UnfinishedTransactionActivity : BaseActivity<ActivityUnfinishedTransaction
         }
 
         mUnfinishedTransactionViewModel.setUser(getUserPreference().user)
+        mUnfinishedTransactionViewModel.setServerLiveData(getServerPreference().server)
         subscribeToLiveData()
+
 
     }
 

@@ -57,6 +57,7 @@ class DetailTransactionActivity : BaseActivity<ActivityDetailTransactionBinding,
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        mDetailTransactionViewModel.setServerLiveData(getServerPreference().server)
         btn_progress.setOnClickListener {
             startActivityForResult(ProgressTransactionActivity.newIntent(this, mDetailTransactionViewModel.transactionLiveData.value?.idTransaction), PROGRESS_CODE)
         }

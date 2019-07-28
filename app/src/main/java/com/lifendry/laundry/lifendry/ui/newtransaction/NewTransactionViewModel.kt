@@ -31,6 +31,7 @@ class NewTransactionViewModel : BaseViewModel() {
                 setLoading(true)
                 val transaction = withContext(Dispatchers.IO) {
                     dataSource?.doCreateTransaction(
+                        getServerLiveData().value?.idServer,
                         userLiveData.value?.id,
                         customerLiveData.value?.id,
                         menuLiveData.value?.id,

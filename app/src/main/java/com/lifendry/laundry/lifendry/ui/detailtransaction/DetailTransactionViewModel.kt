@@ -43,7 +43,7 @@ class DetailTransactionViewModel : BaseViewModel() {
             setLoading(true)
 
             val response = withContext(Dispatchers.IO){
-                dataSource?.doPaidTransaction(transactionLiveData.value?.idTransaction)
+                dataSource?.doPaidTransaction(getServerLiveData().value?.idServer, transactionLiveData.value?.idTransaction)
             }
 
             when(response){
@@ -73,7 +73,7 @@ class DetailTransactionViewModel : BaseViewModel() {
             setLoading(true)
 
             val response = withContext(Dispatchers.IO){
-                dataSource?.doTakeTransaction(transactionLiveData.value?.idTransaction)
+                dataSource?.doTakeTransaction(getServerLiveData().value?.idServer, transactionLiveData.value?.idTransaction)
             }
 
             when(response){

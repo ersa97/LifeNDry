@@ -50,7 +50,7 @@ class ProgressTransactionViewModel : BaseViewModel() {
             setLoading(true)
 
             val response = withContext(Dispatchers.IO) {
-                dataSource?.doStartLaundryActivity(idLaundryActivity, idWorker)
+                dataSource?.doStartLaundryActivity(getServerLiveData().value?.idServer, idLaundryActivity, idWorker)
             }
 
             when (response) {
@@ -74,7 +74,7 @@ class ProgressTransactionViewModel : BaseViewModel() {
             setLoading(true)
 
             val response = withContext(Dispatchers.IO) {
-                dataSource?.doFinishLaundryActivity(idActivityLaundry)
+                dataSource?.doFinishLaundryActivity(getServerLiveData().value?.idServer, idActivityLaundry)
             }
 
             when (response) {

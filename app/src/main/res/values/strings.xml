@@ -33,4 +33,9 @@
     <string name="take">Ambil</string>
     <string name="date_format">%1$td %1$tB %1$tY</string>
     <string name="date_time_format">%1$td %1$tB %1$tY %1$tT</string>
+    <string-array name="server">
+        <item>pdt3.himastika.me</item>
+        <item>pdt2.himastika.me</item>
+        <item>pdt1.himastika.me</item>
+    </string-array>
 </resources>

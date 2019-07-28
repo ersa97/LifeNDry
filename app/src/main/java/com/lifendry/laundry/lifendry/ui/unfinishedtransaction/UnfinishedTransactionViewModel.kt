@@ -26,7 +26,7 @@ class UnfinishedTransactionViewModel : BaseViewModel() {
             setLoading(true)
 
             val response = withContext(Dispatchers.IO){
-                dataSource?.doShowUnfinishedTransaction(userLiveData.value?.id)
+                dataSource?.doShowUnfinishedTransaction(getServerLiveData().value?.idServer, userLiveData.value?.id)
             }
 
             when(response){

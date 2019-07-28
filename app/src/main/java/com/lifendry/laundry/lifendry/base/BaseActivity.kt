@@ -7,6 +7,7 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import com.lifendry.laundry.lifendry.prefs.ServerPreference
 import com.lifendry.laundry.lifendry.prefs.UserPreference
 import com.lifendry.laundry.lifendry.utils.NetworkUtils
 
@@ -14,6 +15,7 @@ abstract class BaseActivity<T : ViewDataBinding, V : BaseViewModel> : AppCompatA
     private lateinit var mViewDataBinding: T
     private lateinit var mViewModel: V
     private lateinit var userPreference: UserPreference
+    private lateinit var serverPreference: ServerPreference
 
     @LayoutRes
     abstract fun getLayoutId(): Int
@@ -33,6 +35,10 @@ abstract class BaseActivity<T : ViewDataBinding, V : BaseViewModel> : AppCompatA
         return userPreference
     }
 
+    fun getServerPreference(): ServerPreference{
+        return serverPreference
+    }
+
     private fun performDataBinding() {
         mViewDataBinding = DataBindingUtil.setContentView(this, getLayoutId())
         this.mViewModel = getViewModel()
@@ -43,7 +49,11 @@ abstract class BaseActivity<T : ViewDataBinding, V : BaseViewModel> : AppCompatA
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        performDataBinding()
         userPreference  = UserPreference(this)
+        serverPreference = ServerPreference(this)
+        performDataBinding()
+        serverPreference.server?.ip?.let {
+            mViewModel.setIP("${it}/api/")
+        }
     }
 }

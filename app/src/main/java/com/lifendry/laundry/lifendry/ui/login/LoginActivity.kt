@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -14,6 +15,7 @@ import com.lifendry.laundry.lifendry.base.BaseActivity
 import com.lifendry.laundry.lifendry.databinding.ActivityLoginBinding
 import com.lifendry.laundry.lifendry.prefs.UserPreference
 import com.lifendry.laundry.lifendry.ui.main.MainActivity
+import com.lifendry.laundry.lifendry.ui.settingserver.ServerSettingActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.template_toolbar.*
 
@@ -40,6 +42,10 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>() {
         checkLogin()
         mLoginBinding = getViewDataBinding()
         setUp()
+
+        btn_select_server.setOnClickListener(View.OnClickListener {
+            startActivityForResult(Intent(this, ServerSettingActivity::class.java), SERVER_CODE)
+        })
     }
 
     private fun setUp(){
@@ -69,8 +75,18 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>() {
         })
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == SERVER_CODE && resultCode == RESULT_OK){
+            getServerPreference().server?.ip?.let {
+                mLoginViewModel.setIP(it)
+            }
+        }
+    }
+
     private fun checkLogin(){
-        if(getUserPreference().user!= null){
+
+        if(getUserPreference().user!= null && getServerPreference().server != null){
             if(getUserPreference().user?.roleId == 0){
                 startActivity(MainActivity.newIntent(this))
                 finish()
@@ -83,5 +99,6 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>() {
 
     companion object{
         fun newIntent(context: Context) : Intent = Intent(context, LoginActivity::class.java)
+        const val SERVER_CODE = 1
     }
 }

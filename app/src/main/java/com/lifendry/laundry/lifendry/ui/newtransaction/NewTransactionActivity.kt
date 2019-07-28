@@ -124,6 +124,7 @@ class NewTransactionActivity : BaseActivity<ActivityNewTransactionBinding, NewTr
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         mNewTransactionViewModel.userLiveData.postValue(getUserPreference().user)
+        mNewTransactionViewModel.setServerLiveData(getServerPreference().server)
 
         layout_customer.setOnClickListener {
             if (mNewTransactionViewModel.customerLiveData.value == null) {

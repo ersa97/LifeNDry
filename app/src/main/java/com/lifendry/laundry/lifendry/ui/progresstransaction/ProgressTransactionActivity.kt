@@ -79,6 +79,8 @@ class ProgressTransactionActivity : BaseActivity<ActivityProgressTransactionBind
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
+        mProgressTransactionViewModel.setServerLiveData(getServerPreference().server)
+
         mProgressTransactionAdapter = ProgressTransactionAdapter(startListener = {
             startActivityForResult(
                 WorkerActivity.newIntentLookUpActivities(this, it.idActivityLaundry),

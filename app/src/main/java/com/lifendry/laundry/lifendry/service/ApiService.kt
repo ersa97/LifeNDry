@@ -65,6 +65,7 @@ interface ApiService {
     @POST("transaksi/store")
     @FormUrlEncoded
     fun createTransactionAsync(
+        @Field("id_server") idServer: Int?,
         @Field("id_cabang") idBranch: String?,
         @Field("id_pelanggan") idCustomer: String?,
         @Field("id_menu") idMenu: String?,
@@ -73,31 +74,33 @@ interface ApiService {
     ) : Deferred<Response<TransactionResponse>>
 
     @GET("transaksi/showUnfinished")
-    fun showUnfinishedTransactionAsync(@Query("id_cabang") idBranch: String?) : Deferred<Response<TransactionListResponse>>
+    fun showUnfinishedTransactionAsync(@Query("id_server") idServer: Int?, @Query("id_cabang") idBranch: String?) : Deferred<Response<TransactionListResponse>>
 
     @GET("aktivitaslaundry/show")
     fun showLaundryActivityAsync(@Query("id_transaksi_laundry") idTransaction: String?) : Deferred<Response<ActivityLaundryListResponse>>
 
-    @POST("aktivitaslaundry/melakukanAktivitasLaundry")
+    @PUT("aktivitaslaundry/melakukanAktivitasLaundry")
     @FormUrlEncoded
-    fun startLaundryActivityAsync(@Field("id_aktivitas_laundry") idLaundryActivity: String?,
+    fun startLaundryActivityAsync(@Field("id_server") idServer: Int?,
+                                @Field("id_aktivitas_laundry") idLaundryActivity: String?,
                                   @Field("id_pegawai") idWorker: String?) : Deferred<Response<ActivityLaundryResponse>>
 
-    @POST("aktivitaslaundry/menyelesaikanAktivitasLaundry")
+    @PUT("aktivitaslaundry/menyelesaikanAktivitasLaundry")
     @FormUrlEncoded
-    fun finishLaundryActivityAsync(@Field("id_aktivitas_laundry") idLaundryActivity: String?) :Deferred<Response<ActivityLaundryResponse>>
+    fun finishLaundryActivityAsync(@Field("id_server") idServer: Int?,
+                                   @Field("id_aktivitas_laundry") idLaundryActivity: String?) :Deferred<Response<ActivityLaundryResponse>>
 
     @PUT("transaksi/paid")
     @FormUrlEncoded
-    fun paidTransactionAsync(@Field("id_transaksi") id: String?) : Deferred<Response<TransactionResponse>>
+    fun paidTransactionAsync(@Field("id_server") idServer: Int?, @Field("id_transaksi") id: String?) : Deferred<Response<TransactionResponse>>
 
     @PUT("transaksi/take")
     @FormUrlEncoded
-    fun takeTransactionAsync(@Field("id_transaksi") id: String?) : Deferred<Response<TransactionResponse>>
+    fun takeTransactionAsync(@Field("id_server") idServer: Int?, @Field("id_transaksi") id: String?) : Deferred<Response<TransactionResponse>>
 
     @GET("transaksi/getTransaction")
     fun getTransactionAsync(@Query("id_transaksi_laundry") id: String?) : Deferred<Response<TransactionResponse>>
 
     @GET("transaksi/showFinishedTransaction")
-    fun showFinishedTransactionAsync(@Query("id_cabang") id: String?) : Deferred<Response<TransactionListResponse>>
+    fun showFinishedTransactionAsync(@Query("id_server") idServer: Int?, @Query("id_cabang") id: String?) : Deferred<Response<TransactionListResponse>>
 }
